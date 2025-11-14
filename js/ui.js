@@ -123,7 +123,8 @@ const UI = {
         }
 
         cont.innerHTML = html;
-
+        
+        this.renderResumen();
         this.graficarPH();
         this.graficarLicencias();
     },
