@@ -48,3 +48,18 @@ td:nth-child(2), th:nth-child(2) { width:170px; text-align:left; padding-left:8p
   .controls { flex-direction:column; align-items:flex-start; }
   .modal-content { width:95%; height:80vh; }
 }
+/* Reducir tamaño para que la grilla entre completa */
+table th, table td {
+    padding: 3px 4px !important;
+    font-size: 12px !important;
+}
+
+/* Legajo más compacto */
+td:nth-child(1), th:nth-child(1) {
+    width: 60px !important;
+}
+
+/* Nombre más compacto */
+td:nth-child(2), th:nth-child(2) {
+    width: 160px !important;
+}
