@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Asistencia Tecnología</title>
+<link rel="stylesheet" href="css/estilos.css">
+<!-- Librerías -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<h1>Asistencia Tecnología</h1>
+
+<div class="controls">
+  <select id="mesSelect"></select>
+  <select id="anioSelect"></select>
+  <select id="coordFilter" onchange="UI.renderTabla()">
+    <option value="">(Todos los coordinadores)</option>
+  </select>
+
+  <button id="btnActualizar">🔄 Actualizar</button>
+  <button id="btnLicencias">📋 Licencias</button>
+  <button id="btnEmpleados">⚙️ Empleados</button>
+  <button id="btnExportPDF">📤 Exportar PDF</button>
+  <button id="btnExportJSON">💾 Exportar JSON</button>
+  <input type="file" id="importJSONFile" style="display:none">
+  <button id="btnImportJSON">📁 Importar JSON</button>
+</div>
+
+<div id="tabla-container" style="overflow-x:auto;"></div>
+
+<div id="estadisticas-container">
+  <div id="resumenTabla"></div>
+  <div id="graficoPHContainer"><h3>Presencial vs HO</h3><canvas id="graficoPH"></canvas></div>
+  <div id="graficoLicContainer"><h3>Licencias</h3><canvas id="graficoLicencias"></canvas></div>
+</div>
+
+<!-- MODAL EMPLEADOS -->
+<div id="settingsModal" class="modal" aria-hidden="true">
+  <div class="modal-content">
+    <h3>⚙️ Configuración de empleados</h3>
+    <div id="settingsContent"></div>
+    <div id="settingsButtons">
+      <button id="btnAddEmployee">➕ Agregar empleado</button>
+      <button id="btnCloseSettings">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL LICENCIAS -->
+<div id="licenciasModal" class="modal" aria-hidden="true">
+  <div class="modal-content">
+    <h3>📋 Gestión de licencias</h3>
+    <div id="licenciasContent"></div>
+    <div id="licenciasButtons">
+      <button id="btnSaveLic">💾 Guardar</button>
+      <button id="btnCloseLic">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/estado.js"></script>
+<script src="js/empleados.js"></script>
+<script src="js/licencias.js"></script>
+<script src="js/ui.js"></script>
+
+<script>
+UI.init();
+
+// Wire buttons
+document.getElementById('btnActualizar').addEventListener('click', UI.renderTabla);
+document.getElementById('btnLicencias').addEventListener('click', ()=>Licencias.open());
+document.getElementById('btnEmpleados').addEventListener('click', ()=>Settings.open());
+document.getElementById('btnExportPDF').addEventListener('click', UI.exportarPDF);
+document.getElementById('btnAddEmployee').addEventListener('click', ()=>{ Settings.agregarEmpleado(); });
+document.getElementById('btnCloseSettings').addEventListener('click', ()=>{ Settings.close(); });
+document.getElementById('btnSaveLic').addEventListener('click', ()=>{ Licencias.guardar(); });
+document.getElementById('btnCloseLic').addEventListener('click', ()=>{ Licencias.close(); });
+
+document.getElementById('btnExportJSON').addEventListener('click', ()=>{ exportarJSON(); });
+document.getElementById('btnImportJSON').addEventListener('click', ()=>{ document.getElementById('importJSONFile').click(); });
+document.getElementById('importJSONFile').addEventListener('change', function(){ importarJSON(this); });
+
+</script>
+</body>
+</html>

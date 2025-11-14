@@ -1,0 +1,50 @@
+body { font-family: Arial; margin: 20px; background: #f5f7fa; color:#222; }
+h1 { margin-bottom: 10px; font-size:20px; }
+table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+th, td { border: 1px solid #ccc; text-align: center; padding: 3px 4px; font-size:12px; }
+th { background: #eee; font-size:13px; }
+.sabado, .domingo { background: #f0f0f0; }
+.trabaja { background: #007bff; color:white; font-size:11px; }
+.no-trabaja { background:#e0e0e0; }
+.no-trabaja-h { background:#ffa500; color:white; font-weight:bold; font-size:11px; }
+.vacaciones { color:white; font-weight:bold; font-size:11px; }
+
+button { padding: 5px 8px; cursor:pointer; font-size:13px; }
+.controls { margin-bottom: 10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+#estadisticas-container {
+  display:flex; gap:12px; margin-top:12px;
+}
+#resumenTabla, #graficoPHContainer, #graficoLicContainer {
+  flex:1; background:white; border-radius:8px; padding:10px;
+  box-shadow:0 0 5px rgba(0,0,0,0.06);
+}
+canvas { max-width: 100%; margin:auto; display:block; }
+
+/* MODALES */
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:9999; }
+.modal[aria-hidden="false"]{ display:block; }
+.modal-content {
+  margin:4% auto; background:white; padding:14px; border-radius:8px; width:78%;
+  display:flex; flex-direction:column; height:70vh;
+}
+
+/* empleados / licencias content */
+#settingsContent, #licenciasContent {
+  flex:1; overflow-y:auto; padding-right:8px;
+  margin-bottom:10px; border:1px solid #eee; border-radius:6px;
+  background:#fafafa;
+}
+#settingsButtons, #licenciasButtons {
+  display:flex; justify-content:space-between; padding-top:8px; border-top:1px solid #ddd;
+}
+
+/* compact columns */
+td:nth-child(1), th:nth-child(1) { width:60px; }
+td:nth-child(2), th:nth-child(2) { width:170px; text-align:left; padding-left:8px; }
+
+/* responsive */
+@media (max-width:800px){
+  .controls { flex-direction:column; align-items:flex-start; }
+  .modal-content { width:95%; height:80vh; }
+}
