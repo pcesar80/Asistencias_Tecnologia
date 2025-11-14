@@ -1,80 +1,108 @@
-/* licencias.js - módulo Licencias */
 const Licencias = {
-  tipos:[
-    {nombre:"Vacaciones",color:"#7cd67c",letra:"V"},
-    {nombre:"Falta c/Aviso",color:"#ffcc00",letra:"FA"},
-    {nombre:"Estudio",color:"#6699ff",letra:"LE"},
-    {nombre:"Festividad",color:"#ff9966",letra:"LF"},
-    {nombre:"Médica",color:"#cc6666",letra:"LM"},
-    {nombre:"Baja",color:"#999999",letra:"B"},
-    {nombre:"Matrimonio",color:"#cc99ff",letra:"LMA"},
-    {nombre:"Paternidad",color:"#99cc99",letra:"LP"},
-    {nombre:"Compensación Presencia", color:"#60b9ff", letra:"CP"},
-    {nombre:"Cambio Home", color:"#ddddee", letra:"CH"}
-  ],
+    tipos: [
+        { nombre:"Vacaciones", color:"#7cd67c", letra:"V" },
+        { nombre:"Falta c/Aviso", color:"#ffcc00", letra:"FA" },
+        { nombre:"Estudio", color:"#6699ff", letra:"LE" },
+        { nombre:"Festividad", color:"#ff9966", letra:"LF" },
+        { nombre:"Médica", color:"#cc6666", letra:"LM" },
+        { nombre:"Baja", color:"#999999", letra:"B" },
+        { nombre:"Matrimonio", color:"#cc99ff", letra:"LMA" },
+        { nombre:"Paternidad", color:"#99cc99", letra:"LP" },
 
-  open(){ document.getElementById('licenciasModal').setAttribute('aria-hidden','false'); this.render(); },
-  close(){ document.getElementById('licenciasModal').setAttribute('aria-hidden','true'); },
+        /* Nuevos tipos */
+        { nombre:"Compensación Presencia", color:"#60b9ff", letra:"CP" },
+        { nombre:"Cambio Home", color:"#ddddee", letra:"CH" }
+    ],
 
-  guardar(){
-    const emp = parseInt(document.getElementById("licEmpleado").value);
-    const tipo = parseInt(document.getElementById("licTipo").value);
-    const inicio = document.getElementById("licInicio").value;
-    const fin = document.getElementById("licFin").value;
-    if(!inicio||!fin) return alert("Indique inicio y fin");
-    Estado.licencias.push({ empleado:emp, tipo, inicio, fin });
-    guardarEstado(); this.render(); UI.renderTabla();
-  },
+    open() {
+        licenciasModal.style.display = "block";
+        this.render();
+    },
 
-  eliminar(i){
-    if(!confirm('Eliminar licencia?')) return;
-    Estado.licencias.splice(i,1);
-    guardarEstado(); this.render(); UI.renderTabla();
-  },
+    close() {
+        licenciasModal.style.display = "none";
+    },
 
-  renderLista(){
-    const cont = document.getElementById("licenciasLista");
-    const empSel = parseInt(document.getElementById("licEmpleado").value);
-    const lista = Estado.licencias.filter(l=>l.empleado===empSel);
-    if(lista.length===0){ cont.innerHTML="<i>Sin licencias</i>"; return; }
-    cont.innerHTML = lista.map(l=>{
-      const e = Estado.empleados[l.empleado]?.nombre || 'N/A';
-      const t = this.tipos[l.tipo];
-      return `
-        <div style="margin-bottom:5px;padding:6px;background:#eee;border-radius:5px;">
-          <b>${e}</b> — ${t.nombre} (${l.inicio} → ${l.fin})
-          <button onclick="Licencias.eliminar(${Estado.licencias.indexOf(l)})" style="float:right;">🗑️</button>
+    guardar() {
+        const empleado = parseInt(document.getElementById("licEmpleado").value);
+        const tipo = parseInt(document.getElementById("licTipo").value);
+        const inicio = document.getElementById("licInicio").value;
+        const fin = document.getElementById("licFin").value;
+
+        if (!inicio || !fin) return alert("Debe indicar inicio y fin");
+
+        Estado.licencias.push({ empleado, tipo, inicio, fin });
+
+        this.render();
+        UI.renderTabla();
+    },
+
+    eliminar(i) {
+        Estado.licencias.splice(i, 1);
+        this.render();
+        UI.renderTabla();
+    },
+
+    renderLista() {
+        const empSel = parseInt(document.getElementById("licEmpleado").value);
+        const cont = document.getElementById("licenciasLista");
+
+        const lista = Estado.licencias.filter(l => l.empleado === empSel);
+
+        if (lista.length === 0) {
+            cont.innerHTML = "<i>No hay licencias cargadas</i>";
+            return;
+        }
+
+        cont.innerHTML = lista.map((l, idx) => {
+            const emp = Estado.empleados[l.empleado].nombre;
+            const tipo = this.tipos[l.tipo];
+
+            return `
+            <div style="background:#eee;padding:6px;margin-bottom:6px;border-radius:5px;">
+                <b>${emp}</b> — ${tipo.nombre} (${l.inicio} → ${l.fin})
+                <button onclick="Licencias.eliminar(${Estado.licencias.indexOf(l)})"
+                    style="float:right;">🗑️</button>
+            </div>`;
+        }).join("");
+    },
+
+    render() {
+        const c = document.getElementById("licenciasContent");
+
+        c.innerHTML = `
+        <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-end;">
+            <div>
+                <label>Empleado</label><br>
+                <select id="licEmpleado" onchange="Licencias.renderLista()">
+                    ${Estado.empleados.map((e,i)=>`
+                        <option value="${i}">${e.nombre}</option>`).join("")}
+                </select>
+            </div>
+
+            <div>
+                <label>Tipo</label><br>
+                <select id="licTipo">
+                    ${this.tipos.map((t,i)=>`
+                        <option value="${i}">${t.nombre}</option>`).join("")}
+                </select>
+            </div>
+
+            <div>
+                <label>Inicio</label><br>
+                <input type="date" id="licInicio">
+            </div>
+
+            <div>
+                <label>Fin</label><br>
+                <input type="date" id="licFin">
+            </div>
         </div>
-      `;
-    }).join('');
-  },
 
-  render(){
-    const c = document.getElementById("licenciasContent");
-    const empOpts = Estado.empleados.map((e,i)=>`<option value="${i}">${e.nombre}</option>`).join('');
-    c.innerHTML=`
-      <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:8px;">
-        <div>
-          <label>Empleado</label><br>
-          <select id="licEmpleado" onchange="Licencias.renderLista()">
-            ${empOpts}
-          </select>
-        </div>
+        <hr>
+        <div id="licenciasLista"></div>
+        `;
 
-        <div>
-          <label>Tipo</label><br>
-          <select id="licTipo">
-            ${Licencias.tipos.map((t,i)=>`<option value="${i}">${t.nombre}</option>`).join('')}
-          </select>
-        </div>
-
-        <div><label>Inicio</label><br><input type="date" id="licInicio"></div>
-        <div><label>Fin</label><br><input type="date" id="licFin"></div>
-      </div>
-
-      <hr>
-      <div id="licenciasLista"></div>
-    `;
-    this.renderLista();
-  }
+        this.renderLista();
+    }
 };
